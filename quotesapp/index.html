@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/9c50c6122d.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.rawgit.com/michalsnik/aos/2.3.4/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css"/>
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <div class="inner" data-aos="zoom-in">
+            <div class="box">
+                <p class="number">
+                    <img src="images/twitter.avif" alt="tweetMe" title="Tweet ME" id="tweetMe">
+                </p>
+                <div class="text">
+                    <i class="start-quote fa-solid fa-quote-left"></i>
+                    <p id="quotes" class="quotes"></p>
+                    <p id="author" class="author"></p>
+                </div>
+                <label class="button">
+                    <p id="newQ">New Quote</p>
+                </label>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.rawgit.com/michalsnik/aos/2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init();
+        const quotes = document.getElementById("quotes");
+        const author = document.getElementById("author");
+        const newQ = document.getElementById("newQ");
+        const tweetMe = document.getElementById("tweetMe");
+        let realData = "";
+        let quoteData = "";
+        const tweetNow = () => {
+            let tweetPost = `https://twitter.com/intent/tweet?text=${quoteData.text} ${quoteData.author}`;
+            window.open(tweetPost);
+        }
+        const getNewQuote = () => {
+            let rnum = Math.floor(Math.random()*100);
+            quoteData = realData[rnum];
+            quotes.innerText = `${quoteData.text}`;
+            quoteData.author === null?(author.innerText="unknown"):(author.innerText=`${quoteData.author}`);
+        };
+        const getQuotes = async() => {
+            const api = "https://type.fit/api/quotes";
+            try {
+                let data = await fetch(api);
+                realData = await data.json();
+                getNewQuote();
+                // console.log(realData);
+            } catch (error) {
+                
+            }
+        };
+
+        newQ.addEventListener("click", getNewQuote);
+        tweetMe.addEventListener('click',tweetNow);
+        getQuotes();
+    </script>
+</body>
+</html>
